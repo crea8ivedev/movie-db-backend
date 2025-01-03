@@ -4,9 +4,15 @@ const appUrl = process.env.APP_URL;
 
 export async function index(req, res, next) {
   try {
-    const [data, meta] = await prisma.movie.paginate().withPages({
-      limit: 12,
-    });
+    const [data, meta] = await prisma.movie
+      .paginate({
+        where: {
+          userId: req.user.id,
+        },
+      })
+      .withPages({
+        limit: 12,
+      });
     res.json({
       data,
       meta,
@@ -20,7 +26,7 @@ export async function show(req, res, next) {
   try {
     const params = req.params;
     const movie = await prisma.movie.findUniqueOrThrow({
-      where: { id: params.id },
+      where: { id: params.id, userId: req.user.id },
     });
     return res.json(movie);
   } catch (error) {
@@ -32,7 +38,7 @@ export async function create(req, res, next) {
   try {
     const body = req.body;
 
-    if(!req.file){
+    if (!req.file) {
       return res.status(400).json({
         message: "poster is required",
       });
@@ -41,6 +47,7 @@ export async function create(req, res, next) {
       title: body.title,
       year: +body.year,
       poster: `${appUrl}/uploads/${req.file.filename}`,
+      userId: req.user.id,
     };
     const movie = await prisma.movie.create({
       data,
@@ -59,10 +66,11 @@ export async function update(req, res, next) {
     const data = {
       title: body.title,
       year: +body.year,
+      userId: req.user.id,
     };
 
-    if(req.file){
-      data.poster = `${appUrl}/uploads/${req.file.filename}`
+    if (req.file) {
+      data.poster = `${appUrl}/uploads/${req.file.filename}`;
     }
 
     const movie = await prisma.movie.update({
