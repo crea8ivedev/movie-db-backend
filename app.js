@@ -7,6 +7,8 @@ import cors from "cors";
 import router from "./router.js";
 import globalException from "./src/exceptions/global.exception.js";
 import validationException from "./src/exceptions/validation.exception.js";
+import  swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger.config.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -33,6 +35,7 @@ app.use(passport.session());
 
 app.use(express.static(path.resolve("public")));
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api", router);
 
 app.use(validationException);
