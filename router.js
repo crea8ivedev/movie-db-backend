@@ -18,7 +18,7 @@ router.get("/movies", authMiddleware, moviesController.index);
 router.get("/movies/:id", authMiddleware, moviesController.show);
 router.post(
   "/movies",
-  authMiddleware,
+  
   upload.single("poster"),
   createMovieValidation,
   moviesController.create

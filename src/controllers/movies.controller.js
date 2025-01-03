@@ -1,5 +1,7 @@
 import prisma from "../utils/prisma.js";
 
+const appUrl = process.env.APP_URL;
+
 export async function index(req, res, next) {
   try {
     const [data, meta] = await prisma.movie.paginate().withPages({
@@ -35,11 +37,10 @@ export async function create(req, res, next) {
         message: "poster is required",
       });
     }
-
     const data = {
       title: body.title,
       year: +body.year,
-      poster: `/uploads/${req.file.filename}`,
+      poster: `${appUrl}/uploads/${req.file.filename}`,
     };
     const movie = await prisma.movie.create({
       data,
@@ -61,7 +62,7 @@ export async function update(req, res, next) {
     };
 
     if(req.file){
-      data.poster = `/uploads/${req.file.filename}`
+      data.poster = `${appUrl}/uploads/${req.file.filename}`
     }
 
     const movie = await prisma.movie.update({

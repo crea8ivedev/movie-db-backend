@@ -50,6 +50,11 @@ export async function login(req, res, next) {
             message: "Internal Server Error",
           });
         }
+        if (!!req.body.rememberMe) {
+          req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000;
+        } else {
+          req.session.cookie.maxAge = 24 * 60 * 60 * 1000;
+        }
         return res.json({
           message: "User login successfully",
         });

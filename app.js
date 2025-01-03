@@ -32,6 +32,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(path.resolve("public")));
+
 app.use("/api", router);
 
 app.use(validationException);
