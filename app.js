@@ -9,6 +9,7 @@ import globalException from "./src/exceptions/global.exception.js";
 import validationException from "./src/exceptions/validation.exception.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger.config.js";
+import basicAuth from "./src/middlewares/basic-auth.middleware.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -35,7 +36,7 @@ app.use(passport.session());
 
 app.use(express.static(path.resolve("public")));
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", basicAuth, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api", router);
 
 app.use(validationException);
